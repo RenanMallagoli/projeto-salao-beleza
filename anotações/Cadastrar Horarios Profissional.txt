@@ -1,0 +1,21 @@
+CADASTRAR DATA E HORÁRIO DE DISPONIBILIDADE DO PROFISSIONAL
+
+1. Obter o ID do profissional desejado
+-Entre na requisição ListaProfissional
+-Clique em Send, a resposta listará todos os profissionais e o Id.
+-Lembrar do id do profissional, não é o usuarioId.
+
+2.Login de Admin
+-Em LoginUsuário, faça login no Body com o email e senha do admin.
+-Clique em Send e copie o token gerado, sem as aspas.
+
+3.Entre em Cadastrar Data
+-altere a URL para http://localhost:3001/api/profissionais/"id"/horarios
+(O "id" da URL será substituido pelo número do id do porfissional)
+-No Body (JSON) coloque os dados das datas e horários:
+{
+  "dia_da_semana": 1,
+  "hora_inicio": "09:00",
+  "hora_fim": "18:00"
+}
+-Clique em Send. Vai ser criado a resposta 201 Created com os dados inseridos.

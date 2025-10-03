@@ -1,0 +1,36 @@
+CADASTRAR SERVIÇOS (PELO INSONMIA)
+
+1. Login Admin no Insonmia
+- Entrar na requisição Login Usuário (config = POST, URL: http://localhost:3001/api/auth/login).
+- Na aba Body, selecionar JSON.
+- Colocar email e senha do usuário ADMIN:
+{
+  "email": "seu-email-de-admin@email.com",
+  "senha": "sua_senha_correta"
+}
+- Clicar em Send. Vai ser gerado a resposta 200 OK e um token.
+- Copiar o token sem as aspas.
+
+2. Criar Serviço
+-Entrar na requisição Criar Serviço (config = POST, URL: http://localhost:3001/api/servicos)
+-Preencher o Body com os dados do serviços:
+{
+  "nome": "Nome do Serviço",
+  "descricao": "Uma breve explicação do que é o serviço.",
+  "duracao_minutos": 60,
+  "preco": 50.00
+}
+-Entrar na aba Auth e selecionar a opção Bearer Token no menu.
+-Colar o token de ADMIN no campo TOKEN e no campo PREFIX digitar Bearer.
+-Clicar em Send. Vai ser gerado a resposta 210 Created com os dados do serviço criado.
+
+3. Criar mais de um serviço
+-Apenas preencher o Body do Criar Serviço com outros dados e clicar em Send.
+
+CADASTRAR SERVIÇOS (PELO SITE DE ADMIN DO SALÃO)
+
+1. Entrar no site na aba de login
+-Faça login com os dados do admin
+-Vai ser direcionado para o dashboard do admin
+-Clique na opção gerenciar serviços
+-Adicione o serviço desejado.

@@ -1,0 +1,14 @@
+VISUALIZAR HORÁRIO DE DISPONIBILIDADE DO PROFISSIONAL
+
+1.Entre na requisição Listar Disponibilidade
+-Utilize a URL: http://localhost:3001/api/profissionais/"id"/disponibilidade
+(O "id" será trocado pelo o id do profissional desejado
+-Em Query Parameters, clique em add duas vezes.
+-Na primeira linha, em NAME, digite data.
+-Na primeira linha, em VALUE, digite a data desejada. Ex: "2025-10-19".
+-Na segunda linha, em NAME, digite servicoId.
+-Na segunda linha, em VALUE, digite o id do serviço desejado. Ex: "1"
+
+-Clique em Send.
+(Se o profissional tiver horários naquele dia, irá aparecer a lista.
+Se for um dia de folga, a lista vai estar vazia)

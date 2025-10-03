@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id            Int           @id @default(autoincrement())
+  nome          String
+  email         String        @unique
+  senha_hash    String
+  telefone      String?
+  tipo          TipoUsuario   @default(CLIENTE)
+  agendamentos  Agendamento[] @relation("ClienteAgendamentos")
+  profissional  Profissional?
+}
+
+model Servico {
+  id              Int           @id @default(autoincrement())
+  nome            String
+  descricao       String?
+  duracao_minutos Int
+  preco           Float
+  agendamentos    Agendamento[]
+}
+
+model Profissional {
+  id              Int               @id @default(autoincrement())
+  usuarioId       Int               @unique
+  usuario         Usuario           @relation(fields: [usuarioId], references: [id])
+  horariosTrabalho HorarioTrabalho[]
+  agendamentos    Agendamento[]     @relation("ProfissionalAgendamentos")
+}
+
+model HorarioTrabalho {
+  id             Int          @id @default(autoincrement())
+  profissionalId Int
+  profissional   Profissional @relation(fields: [profissionalId], references: [id])
+  dia_da_semana  Int // 0 para Domingo, 1 para Segunda, etc.
+  hora_inicio    String
+  hora_fim       String
+}
+
+model Agendamento {
+  id              Int          @id @default(autoincrement())
+  clienteId       Int
+  cliente         Usuario      @relation("ClienteAgendamentos", fields: [clienteId], references: [id])
+  profissionalId  Int
+  profissional    Profissional @relation("ProfissionalAgendamentos", fields: [profissionalId], references: [id])
+  servicoId       Int
+  servico         Servico      @relation(fields: [servicoId], references: [id])
+  data_hora_inicio DateTime
+  data_hora_fim   DateTime
+  status          StatusAgendamento @default(CONFIRMADO)
+}
+
+enum TipoUsuario {
+  CLIENTE
+  PROFISSIONAL
+  ADMIN
+}
+
+enum StatusAgendamento {
+  CONFIRMADO
+  CANCELADO
+  CONCLUIDO
+}

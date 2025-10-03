@@ -1,0 +1,222 @@
+:root {
+  --cor-rosa: #F0B2B2;
+  --cor-rosa-hover: #E0A0A0;
+  --cor-dourado: #D4AF37;
+  --cor-branco: #ffffff;
+  --cor-fundo: #fdfafb; /* Um branco com um leve toque rosado */
+  --cor-borda: #e0e0e0;
+  --cor-texto: #333333;
+  --cor-texto-suave: #666666;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto);
+}
+
+/* Navegação */
+nav {
+  background-color: var(--cor-branco);
+  border-bottom: 1px solid var(--cor-borda);
+  padding: 0.75rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+nav a {
+  color: var(--cor-texto-suave);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease-in-out;
+}
+
+nav a:hover {
+  color: var(--cor-rosa);
+}
+
+/* Conteúdo Principal */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+article {
+    background: var(--cor-branco);
+    border: 1px solid var(--cor-borda);
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* Formulários */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+label {
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+input, select {
+  padding: 10px;
+  border: 1px solid var(--cor-borda);
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--cor-rosa);
+  box-shadow: 0 0 0 2px rgba(240, 178, 178, 0.5);
+}
+
+/* Botões */
+button {
+  background-color: var(--cor-rosa);
+  color: var(--cor-branco);
+  border: none;
+  padding: 12px 20px;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+button:hover {
+  background-color: var(--cor-rosa-hover);
+}
+
+/* Links dentro do nav que não são o botão de sair */
+nav a[role="button"] {
+    margin-left: auto;
+}
+
+/* Botão de Sair */
+nav button {
+    margin-left: auto;
+}
+
+/* Tabelas */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--cor-borda);
+}
+thead {
+  background-color: var(--cor-fundo);
+}
+
+/* Estilos do Header */
+.site-header {
+  background-color: var(--cor-branco);
+  border-bottom: 1px solid var(--cor-borda);
+  padding: 1rem 0;
+  margin-bottom: 2rem;
+}
+
+.site-title {
+  text-align: center;
+  margin: 0;
+  font-family: 'Garamond', 'serif'; /* Uma fonte mais elegante para o título */
+  font-size: 2.5rem;
+  color: var(--cor-rosa);
+  font-weight: 500;
+}
+
+/* Ajuste no nav para remover o padding duplicado */
+nav {
+  padding: 0.75rem 0; /* Remove o padding lateral pois o container já tem */
+  justify-content: center; /* Centraliza os links do menu */
+}
+
+/* Personalização do Calendário (react-calendar) */
+/* Cor dos números dos dias */
+.react-calendar__tile {
+  color: var(--cor-texto); 
+}
+
+/* Cor do dia selecionado (fundo e texto) */
+.react-calendar__tile--active {
+  background: var(--cor-rosa) !important;
+  color: var(--cor-branco) !important;
+}
+
+/* Cor ao passar o mouse sobre um dia */
+.react-calendar__tile:enabled:hover,
+.react-calendar__tile:enabled:focus {
+  background-color: #fce7e7 !important; /* Um rosa claro */
+}
+
+/* Cor do dia de hoje */
+.react-calendar__tile--now {
+  background: #fdf0f0 !important; /* Outro rosa claro para o dia atual */
+  color: var(--cor-texto) !important;
+}
+
+/* Estilos dos Botões de Horário de Agendamento */
+.horario-button {
+  background-color: var(--cor-branco);
+  border: 1px solid var(--cor-borda);
+  color: var(--cor-texto-suave);
+  transition: all 0.2s ease-in-out;
+}
+
+.horario-button:hover {
+  border-color: var(--cor-rosa);
+  color: var(--cor-rosa);
+}
+
+/* Estilo para o botão que foi SELECIONADO */
+.horario-button.selected {
+  background-color: var(--cor-rosa);
+  color: var(--cor-branco);
+  border-color: var(--cor-rosa);
+}
+
+/* Estilo para o botão 'X' de fechar pop-up de edição*/
+.close-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  border: none;
+  background: transparent;
+  padding: 5px 10px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  line-height: 1;
+  color: var(--cor-texto-suave);
+  cursor: pointer;
+}
+.close-button:hover {
+  color: var(--cor-texto);
+  background-color: transparent;
+}
+
+button.secondary {
+  --pico-background-color: #e0e0e0;
+  --pico-border-color: #e0e0e0;
+  --pico-color: var(--cor-texto);
+}
+button.secondary:hover {
+  --pico-background-color: #d1d1d1;
+}
+
+/* Utilitário para agrupar botões lado a lado */
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
