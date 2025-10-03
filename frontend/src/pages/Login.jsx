@@ -23,7 +23,8 @@ const from = location.state?.from?.pathname || '/dashboard';
     }
 
     try {
-      const response = await axios.post('http://localhost:3001/api/auth/login', {
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const response = await axios.post(`${apiUrl}/api/auth/login`, {        
         email: email,
         senha: senha,
       });

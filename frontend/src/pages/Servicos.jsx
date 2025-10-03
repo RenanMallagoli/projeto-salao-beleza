@@ -11,8 +11,8 @@ function Servicos(){
     useEffect(() => {
         const fetchServicos = async () => {
             try{
-                const response = await axios.get('http://localhost:3001/api/servicos');
-                setServicos(response.data);
+                const apiUrl = import.meta.env.VITE_API_URL;
+                const response = await axios.get(`${apiUrl}/api/servicos`);                setServicos(response.data);
             } catch (error){
                 console.error('Erro ao buscar serviços:', error);
             }

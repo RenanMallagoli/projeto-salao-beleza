@@ -8,6 +8,8 @@ function AdminProfissionais() {
   const [selectedUserId, setSelectedUserId] = useState('');
   const [mensagem, setMensagem] = useState('');
   const { token } = useAuth();
+  const apiUrl = import.meta.env.VITE_API_URL;
+
 
   const config = {
     headers: { 'Authorization': `Bearer ${token}` }
@@ -16,8 +18,8 @@ function AdminProfissionais() {
   const fetchData = async () => {
     try {
       const [resProfissionais, resUsuarios] = await Promise.all([
-        axios.get('http://localhost:3001/api/profissionais'),
-        axios.get('http://localhost:3001/api/usuarios', config)
+        axios.get(`${apiUrl}/api/profissionais`),
+        axios.get(`${apiUrl}/api/usuarios`, config)
       ]);
       setProfissionais(resProfissionais.data);
       setUsuarios(resUsuarios.data);
@@ -38,7 +40,8 @@ function AdminProfissionais() {
       return;
     }
     try {
-      await axios.post('http://localhost:3001/api/profissionais', { usuarioId: parseInt(selectedUserId) }, config);
+      const apiUrl = import.meta.env.VITE_API_URL;
+      await axios.post(`${apiUrl}/api/profissionais`, { usuarioId: parseInt(selectedUserId) }, config);
       setMensagem('Profissional adicionado com sucesso!');
       fetchData();
       setSelectedUserId('');
@@ -50,7 +53,7 @@ function AdminProfissionais() {
   const handleDelete = async (id) => {
     if (!window.confirm('Tem certeza? Isso irá remover o perfil profissional, mas não o usuário.')) return;
     try {
-        await axios.delete(`http://localhost:3001/api/profissionais/${id}`, config);
+        await axios.delete(`${apiUrl}/api/profissionais/${id}`, config);
         setMensagem('Profissional removido com sucesso!');
         fetchData();
     } catch (error) {

@@ -18,7 +18,8 @@ function Cadastro() {
     }
 
     try {
-      const response = await axios.post('http://localhost:3001/api/auth/register', {
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const response = await axios.post(`${apiUrl}/api/auth/register`, {
         nome: nome,
         email: email,
         senha: senha,

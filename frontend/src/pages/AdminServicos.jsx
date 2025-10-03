@@ -13,10 +13,11 @@ function AdminServicos() {
   });
   const [mensagem, setMensagem] = useState('');
   const { token } = useAuth();
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const fetchServicos = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/api/servicos');
+      const response = await axios.get(`${apiUrl}/api/servicos`);
       setServicos(response.data);
     } catch (error) {
       console.error('Erro ao buscar serviços:', error);
@@ -48,7 +49,7 @@ function AdminServicos() {
         preco: parseFloat(novoServico.preco)
       }
 
-      await axios.post('http://localhost:3001/api/servicos', dadosParaEnviar, config);
+      await axios.post(`${apiUrl}/api/servicos`, dadosParaEnviar, config);
 
       setMensagem('Serviço criado com sucesso!');
       fetchServicos(); // Atualiza a lista de serviços
@@ -68,7 +69,7 @@ function AdminServicos() {
           'Authorization': `Bearer ${token}`
         }
       };
-      await axios.delete(`http://localhost:3001/api/servicos/${id}`, config);
+    await axios.delete(`${apiUrl}/api/servicos/${id}`, config);
       setMensagem('Serviço deletado com sucesso!');
       fetchServicos();
     } catch (error) {

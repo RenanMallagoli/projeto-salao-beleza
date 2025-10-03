@@ -10,6 +10,8 @@ function Agendar() {
   const { token } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const apiUrl = import.meta.env.VITE_API_URL;
+
 
   const [servico, setServico] = useState(null);
   const [profissionais, setProfissionais] = useState([]);
@@ -23,8 +25,8 @@ function Agendar() {
     const fetchData = async () => {
       try {
         const [resServico, resProfissionais] = await Promise.all([
-          axios.get(`http://localhost:3001/api/servicos/${servicoId}`),
-          axios.get('http://localhost:3001/api/profissionais')
+          axios.get(`${apiUrl}/api/servicos/${servicoId}`),
+          axios.get(`${apiUrl}/api/profissionais`)
         ]);
         setServico(resServico.data);
         setProfissionais(resProfissionais.data);
@@ -38,7 +40,7 @@ function Agendar() {
   useEffect(() => {
     if (selectedProfissional && selectedDate) {
       const dataFormatada = selectedDate.toISOString().split('T')[0];
-      axios.get(`http://localhost:3001/api/profissionais/${selectedProfissional}/disponibilidade?data=${dataFormatada}&servicoId=${servicoId}`)
+      axios.get(`${apiUrl}/api/profissionais/${selectedProfissional}/disponibilidade?data=${dataFormatada}&servicoId=${servicoId}`)
         .then(response => {
           setHorariosDisponiveis(response.data);
           setSelectedHorario('');
@@ -65,7 +67,7 @@ function Agendar() {
 
     try {
       const config = { headers: { 'Authorization': `Bearer ${token}` } };
-      await axios.post('http://localhost:3001/api/agendamentos', {
+      await axios.post('${apiUrl}/api/agendamentos', {
         servicoId: parseInt(servicoId),
         profissionalId: parseInt(selectedProfissional),
         data_hora_inicio: data_hora_inicio.toISOString(),

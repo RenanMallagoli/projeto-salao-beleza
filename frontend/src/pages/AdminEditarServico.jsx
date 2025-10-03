@@ -7,6 +7,8 @@ function AdminEditarServico() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { token } = useAuth();
+  const apiUrl = import.meta.env.VITE_API_URL;
+
 
   const [servico, setServico] = useState({
     nome: '',
@@ -19,7 +21,7 @@ function AdminEditarServico() {
   useEffect(() => {
     const fetchServico = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/api/servicos/${id}`);
+      const response = await axios.get(`${apiUrl}/api/servicos/${id}`);
         setServico({
             nome: response.data.nome,
             descricao: response.data.descricao || '',
@@ -52,7 +54,7 @@ function AdminEditarServico() {
         preco: parseFloat(servico.preco)
       };
 
-      await axios.put(`http://localhost:3001/api/servicos/${id}`, dadosParaEnviar, config);
+      await axios.put(`${apiUrl}/api/servicos/${id}`, dadosParaEnviar, config);
 
       setMensagem('Serviço atualizado com sucesso!');
       setTimeout(() => navigate('/admin/servicos'), 1500);

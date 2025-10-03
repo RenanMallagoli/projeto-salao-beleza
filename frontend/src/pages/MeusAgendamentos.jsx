@@ -9,6 +9,8 @@ function MeusAgendamentos() {
   const [error, setError] = React.useState('');
   const [mensagem, setMensagem] = React.useState('');
   const { user, token } = useAuth();
+  const apiUrl = import.meta.env.VITE_API_URL;
+
 
   const fetchAgendamentos = React.useCallback(async () => {
     if (!user || !token || user.tipo === 'ADMIN') {
@@ -20,8 +22,8 @@ function MeusAgendamentos() {
     const config = { headers: { Authorization: `Bearer ${token}` } };
 
     const url = user.tipo === 'CLIENTE'
-      ? 'http://localhost:3001/api/meus-agendamentos'
-      : 'http://localhost:3001/api/profissionais/meus-agendamentos';
+      ? '${apiUrl}/api/meus-agendamentos'
+      : '${apiUrl}/api/profissionais/meus-agendamentos';
 
     try {
       const response = await axios.get(url, config);
