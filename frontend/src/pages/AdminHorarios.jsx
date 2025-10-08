@@ -16,15 +16,16 @@ function AdminHorarios() {
     hora_fim: '18:00',
   });
 
-  const config = {
-    headers: { Authorization: `Bearer ${token}` }
-  };
+  
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
   const fetchData = useCallback(async () => {
+    if (!token) return;
     try {
+      const config = { headers: { Authorization: `Bearer ${token}` } };
       const [resProfissional, resHorarios] = await Promise.all([
-        axios.get(`http://localhost:3001/api/profissionais/${id}`),
-        axios.get(`http://localhost:3001/api/profissionais/${id}/horarios`, config)
+        axios.get(`${apiUrl}/api/profissionais/${id}`), 
+        axios.get(`${apiUrl}/api/profissionais/${id}/horarios`, config) 
       ]);
       setProfissional(resProfissional.data);
       setHorarios(resHorarios.data);
@@ -32,7 +33,7 @@ function AdminHorarios() {
       console.error("Erro ao buscar dados:", error);
       setMensagem('Erro ao carregar dados.');
     }
-  }, [id, token]);
+  }, [id, token, apiUrl]);
 
   useEffect(() => {
     fetchData();
@@ -46,7 +47,8 @@ function AdminHorarios() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`http://localhost:3001/api/profissionais/${id}/horarios`, novoHorario, config);
+      const config = { headers: { Authorization: `Bearer ${token}` } };
+      await axios.post(`${apiUrl}/api/profissionais/${id}/horarios`, novoHorario, config);
       setMensagem('Horário adicionado com sucesso!');
       fetchData();
     } catch (error) {
@@ -57,7 +59,8 @@ function AdminHorarios() {
   const handleDelete = async (horarioId) => {
     if (!window.confirm('Tem certeza?')) return;
     try {
-      await axios.delete(`http://localhost:3001/api/horarios/${horarioId}`, config);
+      const config = { headers: { Authorization: `Bearer ${token}` } };
+      await axios.delete(`${apiUrl}/api/horarios/${horarioId}`, config);
       setMensagem('Horário removido com sucesso!');
       fetchData();
     } catch (error) {
@@ -67,7 +70,7 @@ function AdminHorarios() {
 
   const diasDaSemana = ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"];
 
-  if (!profissional) return <article aria-busy="true">Carregando...</article>;
+  if (!profissional) return <article aria-busy="true">Carregando dados do profissional...</article>;
 
   return (
     <div className="container">
@@ -122,7 +125,7 @@ function AdminHorarios() {
                 <td>{h.hora_inicio}</td>
                 <td>{h.hora_fim}</td>
                 <td>
-                  <button onClick={() => handleDelete(h.id)} className="secondary" style={{ padding: '5px 10px', backgroundColor: 'var(--cor-vermelho-perigo)'}}>
+                  <button onClick={() => handleDelete(h.id)} className="secondary" style={{ padding: '5px 10px', backgroundColor: 'var(--pico-color-red-500)'}}>
                     &times;
                   </button>
                 </td>
