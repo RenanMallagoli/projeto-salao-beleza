@@ -196,6 +196,22 @@ app.delete('/api/profissionais/:id', authorizeAdmin, async (req, res) => {
     }
 });
 
+app.get('/api/profissionais/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const profissional = await prisma.profissional.findUnique({
+            where: { id: parseInt(id) },
+            include: { usuario: { select: { nome: true } } }
+        });
+        if (!profissional) {
+            return res.status(404).json({ error: 'Profissional não encontrado.' });
+        }
+        res.json(profissional);
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao buscar profissional.' });
+    }
+});
+
 app.get('/api/usuarios', authorizeAdmin, async (req, res) => {
   try {
     const usuarios = await prisma.usuario.findMany({

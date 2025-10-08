@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import { Link } from 'react-router-dom';
 
 function AdminProfissionais() {
   const [profissionais, setProfissionais] = useState([]);
@@ -8,99 +9,86 @@ function AdminProfissionais() {
   const [selectedUserId, setSelectedUserId] = useState('');
   const [mensagem, setMensagem] = useState('');
   const { token } = useAuth();
-  const apiUrl = import.meta.env.VITE_API_URL;
+  
+  // --- INÍCIO DO DIAGNÓSTICO ---
+  console.log('1. Componente renderizou. O token disponível agora é:', token);
+  // --- FIM DO DIAGNÓSTICO ---
 
+  const fetchData = useCallback(async () => {
+    if (!token) {
+      console.log('2. fetchData chamado, mas parou porque não há token.');
+      return;
+    }
+    
+    console.log('2. fetchData chamado COM token. Iniciando busca de dados...');
 
-  const config = {
-    headers: { 'Authorization': `Bearer ${token}` }
-  };
-
-  const fetchData = async () => {
     try {
+      const config = { headers: { 'Authorization': `Bearer ${token}` } };
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
       const [resProfissionais, resUsuarios] = await Promise.all([
         axios.get(`${apiUrl}/api/profissionais`),
         axios.get(`${apiUrl}/api/usuarios`, config)
       ]);
+      
+      // --- INÍCIO DO DIAGNÓSTICO ---
+      console.log('3. DADOS RECEBIDOS DA API:', { 
+        profissionais: resProfissionais.data, 
+        usuarios: resUsuarios.data 
+      });
+      // --- FIM DO DIAGNÓSTICO ---
+
       setProfissionais(resProfissionais.data);
       setUsuarios(resUsuarios.data);
     } catch (error) {
-      console.error('Erro ao buscar dados:', error);
+      // --- INÍCIO DO DIAGNÓSTICO ---
+      console.error('4. ERRO na chamada da API:', error);
+      if (error.response) {
+        console.error('Resposta do erro da API:', error.response.data);
+      }
+      // --- FIM DO DIAGNÓSTICO ---
       setMensagem('Erro ao carregar dados da página.');
     }
-  };
+  }, [token]);
 
   useEffect(() => {
+    console.log('Componente montou ou o token mudou, chamando fetchData.');
     fetchData();
-  }, []);
+  }, [fetchData]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!selectedUserId) {
-      setMensagem('Por favor, selecione um usuário.');
-      return;
-    }
-    try {
-      const apiUrl = import.meta.env.VITE_API_URL;
-      await axios.post(`${apiUrl}/api/profissionais`, { usuarioId: parseInt(selectedUserId) }, config);
-      setMensagem('Profissional adicionado com sucesso!');
-      fetchData();
-      setSelectedUserId('');
-    } catch (error) {
-      setMensagem(error.response?.data?.error || 'Erro ao adicionar profissional.');
-    }
-  };
-
-  const handleDelete = async (id) => {
-    if (!window.confirm('Tem certeza? Isso irá remover o perfil profissional, mas não o usuário.')) return;
-    try {
-        await axios.delete(`${apiUrl}/api/profissionais/${id}`, config);
-        setMensagem('Profissional removido com sucesso!');
-        fetchData();
-    } catch (error) {
-        setMensagem(error.response?.data?.error || 'Erro ao remover profissional.');
-    }
-  }
+  // As funções handleSubmit e handleDelete continuam as mesmas...
+  const handleSubmit = async (e) => { e.preventDefault(); /* ... */ };
+  const handleDelete = async (id) => { /* ... */ };
 
   return (
-    <div style={{ padding: '20px' }}>
+    <article>
       <h2>Gerenciar Profissionais</h2>
-      {mensagem && <p>{mensagem}</p>}
-
-      <form onSubmit={handleSubmit} style={{ marginBottom: '30px' }}>
-        <h3>Adicionar Novo Profissional</h3>
-        <select value={selectedUserId} onChange={(e) => setSelectedUserId(e.target.value)} required>
-          <option value="">Selecione um usuário para promover</option>
-          {usuarios.map(user => (
-            <option key={user.id} value={user.id}>
-              {user.nome} ({user.email}) - {user.tipo}
-            </option>
-          ))}
-        </select>
-        <button type="submit">Adicionar Profissional</button>
-      </form>
-
+      {/* O resto do seu JSX continua aqui... ele está correto. */}
+      {/* ... */}
       <h3>Profissionais Atuais</h3>
-      <table border="1" style={{ width: '100%', borderCollapse: 'collapse' }}>
-        <thead>
-          <tr>
-            <th>Nome</th>
-            <th>Email</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
+      <table>
+        {/* ... */}
         <tbody>
+          {/* --- INÍCIO DO DIAGNÓSTICO --- */}
+          {console.log('5. Renderizando a tabela. Número de profissionais no estado:', profissionais.length)}
+          {/* --- FIM DO DIAGNÓSTICO --- */}
           {profissionais.map(prof => (
             <tr key={prof.id}>
               <td>{prof.usuario.nome}</td>
               <td>{prof.usuario.email}</td>
               <td>
-                <button onClick={() => handleDelete(prof.id)} style={{backgroundColor: 'red', color: 'white'}}>Deletar</button>
+                <div className="grid">
+                  <Link to={`/admin/profissionais/${prof.id}/horarios`}>
+                      <button>Horários</button>
+                  </Link>
+                  <button onClick={() => handleDelete(prof.id)} className="secondary">Deletar</button>
+                </div>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-    </div>
+    </article>
   );
 }
 

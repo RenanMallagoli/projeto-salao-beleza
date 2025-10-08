@@ -16,6 +16,7 @@ import Agendar from './pages/Agendar.jsx';
 import MeusAgendamentos from './pages/MeusAgendamentos.jsx';
 import AdminRoute from './components/AdminRoute.jsx';
 import AdminEditarServico from './pages/AdminEditarServico.jsx';
+import AdminHorarios from './pages/AdminHorarios.jsx';
 
 const router = createBrowserRouter([
   {
@@ -66,6 +67,10 @@ const router = createBrowserRouter([
       path: '/admin/servicos/editar/:id',
       element: <AdminEditarServico />,
     },
+    {
+      path: '/admin/profissionais/:id/horarios',
+      element: <AdminHorarios />,
+    }
         ],
       },
     ],
