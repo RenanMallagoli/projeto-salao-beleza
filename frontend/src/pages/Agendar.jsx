@@ -67,7 +67,7 @@ function Agendar() {
 
     try {
       const config = { headers: { 'Authorization': `Bearer ${token}` } };
-      await axios.post('${apiUrl}/api/agendamentos', {
+      await axios.post(`${apiUrl}/api/agendamentos`, {
         servicoId: parseInt(servicoId),
         profissionalId: parseInt(selectedProfissional),
         data_hora_inicio: data_hora_inicio.toISOString(),
