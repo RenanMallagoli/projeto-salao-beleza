@@ -77,8 +77,8 @@ function Agendar() {
       navigate('/meus-agendamentos');
     } catch (error) {
       console.error('Erro ao confirmar agendamento:', error);
-      alert('Não foi possível confirmar o agendamento.');
-    }
+      const mensagemErro = error.response?.data?.error || 'Não foi possível confirmar o agendamento.';
+      alert(mensagemErro);    }
   };
 
   if (!servico) return <p>Carregando...</p>;

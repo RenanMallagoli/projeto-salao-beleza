@@ -359,14 +359,31 @@ app.get('/api/profissionais/:profissionalId/disponibilidade', async (req, res) =
 
 app.post('/api/agendamentos', authenticateToken, async (req, res) => {
   const { servicoId, profissionalId, data_hora_inicio } = req.body;
-  const clienteId = req.user.usuarioId; 
+  const clienteId = req.user.usuarioId;
 
   try {
     const servico = await prisma.servico.findUnique({ where: { id: parseInt(servicoId) } });
     if (!servico) return res.status(404).json({ error: 'Serviço não encontrado.' });
-    
+
     const inicio = new Date(data_hora_inicio);
     const fim = new Date(inicio.getTime() + servico.duracao_minutos * 60000);
+
+    const agendamentoConflitante = await prisma.agendamento.findFirst({
+      where: {
+        profissionalId: parseInt(profissionalId),
+        
+        data_hora_inicio: {
+          lt: fim,
+        },
+        data_hora_fim: {
+          gt: inicio, 
+        },
+      },
+    });
+
+    if (agendamentoConflitante) {
+      return res.status(409).json({ error: 'Este horário não está mais disponível. Por favor, escolha outro.' });
+    }
 
     const novoAgendamento = await prisma.agendamento.create({
       data: {
@@ -378,6 +395,7 @@ app.post('/api/agendamentos', authenticateToken, async (req, res) => {
       }
     });
     res.status(201).json(novoAgendamento);
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Não foi possível criar o agendamento.' });
