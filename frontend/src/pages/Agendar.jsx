@@ -10,7 +10,7 @@ function Agendar() {
   const { token } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const apiUrl = import.meta.env.VITE_API_URL;
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
 
   const [servico, setServico] = useState(null);
@@ -35,19 +35,19 @@ function Agendar() {
       }
     };
     fetchData();
-  }, [servicoId]);
+  }, [servicoId, apiUrl]);
 
   useEffect(() => {
-    if (selectedProfissional && selectedDate) {
+    if (selectedProfissional && selectedDate && servico) {
       const dataFormatada = selectedDate.toISOString().split('T')[0];
-      axios.get(`${apiUrl}/api/profissionais/${selectedProfissional}/disponibilidade?data=${dataFormatada}&servicoId=${servicoId}`)
+      axios.get(`${apiUrl}/api/profissionais/${selectedProfissional}/disponibilidade?data=${dataFormatada}&servicoId=${servico.id}`)
         .then(response => {
           setHorariosDisponiveis(response.data);
           setSelectedHorario('');
         })
         .catch(error => console.error("Erro ao buscar horários:", error));
     }
-  }, [selectedProfissional, selectedDate, servicoId]);
+  }, [selectedProfissional, selectedDate, servico, apiUrl]);
 
   const handleConfirmarAgendamento = async () => {
     if (!token) {
@@ -63,7 +63,7 @@ function Agendar() {
 
     const [hora, minuto] = selectedHorario.split(':');
     const data_hora_inicio = new Date(selectedDate);
-    data_hora_inicio.setHours(hora, minuto);
+    data_hora_inicio.setHours(parseInt(hora), parseInt(minuto), 0, 0);
 
     try {
       const config = { headers: { 'Authorization': `Bearer ${token}` } };
@@ -81,7 +81,7 @@ function Agendar() {
     }
   };
 
-  if (!servico) return <p>Carregando....</p>;
+  if (!servico) return <p>Carregando...</p>;
 
   return (
     <div className="container" style={{ padding: '20px' }}>
