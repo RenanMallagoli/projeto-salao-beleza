@@ -16,7 +16,6 @@ function AdminHorarios() {
     hora_fim: '18:00',
   });
 
-  
   const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
   const fetchData = useCallback(async () => {
@@ -24,8 +23,8 @@ function AdminHorarios() {
     try {
       const config = { headers: { Authorization: `Bearer ${token}` } };
       const [resProfissional, resHorarios] = await Promise.all([
-        axios.get(`${apiUrl}/api/profissionais/${id}`), 
-        axios.get(`${apiUrl}/api/profissionais/${id}/horarios`, config) 
+        axios.get(`${apiUrl}/api/profissionais/${id}`),
+        axios.get(`${apiUrl}/api/profissionais/${id}/horarios`, config)
       ]);
       setProfissional(resProfissional.data);
       setHorarios(resHorarios.data);
@@ -70,7 +69,7 @@ function AdminHorarios() {
 
   const diasDaSemana = ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"];
 
-  if (!profissional) return <article aria-busy="true">Carregando dados do profissional...</article>;
+  if (!profissional) return <article aria-busy="true">Carregando...</article>;
 
   return (
     <div className="container">
@@ -125,7 +124,7 @@ function AdminHorarios() {
                 <td>{h.hora_inicio}</td>
                 <td>{h.hora_fim}</td>
                 <td>
-                  <button onClick={() => handleDelete(h.id)} className="secondary" style={{ padding: '5px 10px', backgroundColor: 'var(--pico-color-red-500)'}}>
+                  <button onClick={() => handleDelete(h.id)} className="danger" style={{ padding: '5px 10px' }}>
                     &times;
                   </button>
                 </td>

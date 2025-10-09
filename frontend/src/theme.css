@@ -220,3 +220,12 @@ button.secondary:hover {
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
 }
+
+button.danger {
+  --pico-background-color: #d32f2f;
+  --pico-border-color: #d32f2f;
+  --pico-color: #ffffff; 
+}
+button.danger:hover {
+  --pico-background-color: #c62828; /* Um pouco mais escuro no hover */
+}
