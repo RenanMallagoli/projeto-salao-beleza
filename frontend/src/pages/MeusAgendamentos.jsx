@@ -9,8 +9,8 @@ function MeusAgendamentos() {
   const [error, setError] = React.useState('');
   const [mensagem, setMensagem] = React.useState('');
   const { user, token } = useAuth();
-  const apiUrl = import.meta.env.VITE_API_URL;
-
+  
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
   const fetchAgendamentos = React.useCallback(async () => {
     if (!user || !token || user.tipo === 'ADMIN') {
@@ -20,10 +20,10 @@ function MeusAgendamentos() {
 
     setLoading(true);
     const config = { headers: { Authorization: `Bearer ${token}` } };
-
+    
     const url = user.tipo === 'CLIENTE'
-      ? '${apiUrl}/api/meus-agendamentos'
-      : '${apiUrl}/api/profissionais/meus-agendamentos';
+      ? `${apiUrl}/api/meus-agendamentos`
+      : `${apiUrl}/api/profissionais/meus-agendamentos`;
 
     try {
       const response = await axios.get(url, config);
@@ -35,7 +35,7 @@ function MeusAgendamentos() {
     } finally {
       setLoading(false);
     }
-  }, [user, token]);
+  }, [user, token, apiUrl]);
 
   React.useEffect(() => {
     fetchAgendamentos();
@@ -47,7 +47,9 @@ function MeusAgendamentos() {
     }
     try {
       const config = { headers: { Authorization: `Bearer ${token}` } };
-      await axios.delete(`http://localhost:3001/api/agendamentos/${agendamentoId}`, config);
+      
+      await axios.delete(`${apiUrl}/api/agendamentos/${agendamentoId}`, config);
+
       setMensagem('Agendamento cancelado com sucesso!');
       fetchAgendamentos();
     } catch (err) {
@@ -87,7 +89,7 @@ function MeusAgendamentos() {
                 {user.tipo === 'PROFISSIONAL' && ag.cliente && (
                   <p><strong>Cliente:</strong> {ag.cliente.nome} ({ag.cliente.email})</p>
                 )}
-
+                
                 <button 
                   onClick={() => handleCancel(ag.id)} 
                   className="secondary" 
