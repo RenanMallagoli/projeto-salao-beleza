@@ -221,6 +221,17 @@ button.secondary:hover {
     gap: 1rem;
 }
 
+/* Estilo para botões de 'perigo' (deletar, cancelar) */
+button.danger {
+  background-color: #d32f2f !important;
+  border-color: #d32f2f !important;
+  color: #ffffff !important;
+}
+button.danger:hover {
+  background-color: #c62828 !important;
+  border-color: #c62828 !important;
+}
+
 button.danger {
   --pico-background-color: #d32f2f;
   --pico-border-color: #d32f2f;
