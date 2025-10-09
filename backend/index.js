@@ -359,12 +359,12 @@ app.get('/api/profissionais/:profissionalId/disponibilidade', async (req, res) =
 
 app.post('/api/agendamentos', authenticateToken, async (req, res) => {
   const { servicoId, profissionalId, data_hora_inicio } = req.body;
-  const clienteId = req.user.usuarioId;
+  const clienteId = req.user.usuarioId; 
 
   try {
     const servico = await prisma.servico.findUnique({ where: { id: parseInt(servicoId) } });
     if (!servico) return res.status(404).json({ error: 'Serviço não encontrado.' });
-
+    
     const inicio = new Date(data_hora_inicio);
     const fim = new Date(inicio.getTime() + servico.duracao_minutos * 60000);
 
