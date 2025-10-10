@@ -1,5 +1,6 @@
 :root {
   --cor-rosa: #F0B2B2;
+  --cor-rosa-forte: #E57373;
   --cor-rosa-hover: #E0A0A0;
   --cor-dourado: #D4AF37;
   --cor-branco: #ffffff;
@@ -144,46 +145,67 @@ nav {
 
 /* Personalização do Calendário (react-calendar) */
 /* Cor dos números dos dias */
-.react-calendar__tile {
-  color: var(--cor-texto); 
+.react-calendar__navigation button,
+.react-calendar__navigation__label {
+  color: var(--cor-texto-suave);
+  font-weight: bold;
+}
+.react-calendar__navigation button:hover {
+  background-color: var(--cor-fundo) !important;
 }
 
-/* Cor do dia selecionado (fundo e texto) */
+/* Cor dos números dos dias */
+.react-calendar__tile {
+  color: var(--cor-texto);
+  border-radius: 4px; /* Adiciona um leve arredondamento */
+}
+
+/* Cor do dia SELECIONADO (fundo e texto) - Usando a cor forte */
 .react-calendar__tile--active {
-  background: var(--cor-rosa) !important;
+  background: var(--cor-rosa-forte) !important;
   color: var(--cor-branco) !important;
+}
+.react-calendar__tile--active:enabled:hover,
+.react-calendar__tile--active:enabled:focus {
+  background: var(--cor-rosa-forte) !important;
 }
 
 /* Cor ao passar o mouse sobre um dia */
 .react-calendar__tile:enabled:hover,
 .react-calendar__tile:enabled:focus {
-  background-color: #fce7e7 !important; /* Um rosa claro */
+  background-color: #fce7e7 !important;
 }
 
 /* Cor do dia de hoje */
 .react-calendar__tile--now {
-  background: #fdf0f0 !important; /* Outro rosa claro para o dia atual */
+  background: #fdf0f0 !important;
   color: var(--cor-texto) !important;
+  font-weight: bold;
 }
 
-/* Estilos dos Botões de Horário de Agendamento */
+/* --- BOTÕES DE HORÁRIO --- */
+
 .horario-button {
   background-color: var(--cor-branco);
   border: 1px solid var(--cor-borda);
   color: var(--cor-texto-suave);
   transition: all 0.2s ease-in-out;
+  font-weight: 500;
 }
 
 .horario-button:hover {
   border-color: var(--cor-rosa);
   color: var(--cor-rosa);
+  transform: translateY(-2px); /* Efeito sutil ao passar o mouse */
 }
 
-/* Estilo para o botão que foi SELECIONADO */
+/* Estilo para o botão que foi SELECIONADO - Usando a cor forte */
 .horario-button.selected {
-  background-color: var(--cor-rosa);
+  background-color: var(--cor-rosa-forte);
   color: var(--cor-branco);
-  border-color: var(--cor-rosa);
+  border-color: var(--cor-rosa-forte);
+  font-weight: bold;
+  transform: translateY(0); /* Reseta o efeito de hover */
 }
 
 /* Estilo para o botão 'X' de fechar pop-up de edição*/
