@@ -402,20 +402,31 @@ app.post('/api/agendamentos', authenticateToken, async (req, res) => {
   }
 });
 
-app.get('/api/meus-agendamentos', authenticateToken, async (req, res) => {
-  const clienteId = req.user.usuarioId;
+app.get('/api/profissionais/meus-agendamentos', authenticateToken, async (req, res) => {
+  const usuarioId = req.user.usuarioId;
   try {
+    const profissional = await prisma.profissional.findUnique({
+      where: { usuarioId: usuarioId },
+    });
+
+    if (!profissional) {
+      return res.status(404).json({ error: 'Perfil de profissional não encontrado para este usuário.' });
+    }
+
     const agendamentos = await prisma.agendamento.findMany({
-      where: { clienteId: clienteId },
+      where: { profissionalId: profissional.id },
       include: {
         servico: true,
-        profissional: { include: { usuario: true } }
+        cliente: {
+          select: { nome: true, email: true }
+        }
       },
-      orderBy: { data_hora_inicio: 'desc' }
+      orderBy: { data_hora_inicio: 'asc' }
     });
     res.json(agendamentos);
   } catch (error) {
-    res.status(500).json({ error: 'Não foi possível buscar seus agendamentos.' });
+    console.error("Erro ao buscar agenda do profissional:", error);
+    res.status(500).json({ error: 'Não foi possível buscar a agenda.' });
   }
 });
 
