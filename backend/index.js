@@ -335,25 +335,13 @@ app.post('/api/agendamentos', authenticateToken, async (req, res) => {
     const agendamentoConflitante = await prisma.agendamento.findFirst({
       where: {
         profissionalId: parseInt(profissionalId),
-        data_hora_inicio: {
-          lt: fim,
-        },
-        data_hora_fim: {
-          gt: inicio, 
-        },
+        data_hora_inicio: { lt: fim },
+        data_hora_fim: { gt: inicio },
       },
     });
-    if (agendamentoConflitante) {
-      return res.status(409).json({ error: 'Este horário não está mais disponível. Por favor, escolha outro.' });
-    }
+    if (agendamentoConflitante) return res.status(409).json({ error: 'Este horário não está mais disponível.' });
     const novoAgendamento = await prisma.agendamento.create({
-      data: {
-        servicoId: parseInt(servicoId),
-        profissionalId: parseInt(profissionalId),
-        clienteId: clienteId,
-        data_hora_inicio: inicio,
-        data_hora_fim: fim,
-      }
+      data: { servicoId: parseInt(servicoId), profissionalId: parseInt(profissionalId), clienteId, data_hora_inicio: inicio, data_hora_fim: fim }
     });
     res.status(201).json(novoAgendamento);
   } catch (error) {
@@ -363,15 +351,10 @@ app.post('/api/agendamentos', authenticateToken, async (req, res) => {
 });
 
 app.get('/api/meus-agendamentos', authenticateToken, async (req, res) => {
-  const clienteId = req.user.usuarioId; 
-  if (!clienteId) {
-    return res.status(400).json({ error: "ID do cliente não encontrado no token." });
-  }
+  const { usuarioId } = req.user;
   try {
     const agendamentos = await prisma.agendamento.findMany({
-      where: { 
-        clienteId: parseInt(clienteId)
-      },
+      where: { clienteId: parseInt(usuarioId) },
       include: {
         servico: true,
         profissional: { include: { usuario: { select: { nome: true } } } }
@@ -386,21 +369,15 @@ app.get('/api/meus-agendamentos', authenticateToken, async (req, res) => {
 });
 
 app.get('/api/profissionais/meus-agendamentos', authenticateToken, async (req, res) => {
-  const usuarioId = req.user.usuarioId;
+  const { usuarioId } = req.user;
   try {
-    const profissional = await prisma.profissional.findUnique({
-      where: { usuarioId: usuarioId },
-    });
-    if (!profissional) {
-      return res.status(404).json({ error: 'Perfil de profissional não encontrado para este usuário.' });
-    }
+    const profissional = await prisma.profissional.findUnique({ where: { usuarioId } });
+    if (!profissional) return res.status(404).json({ error: 'Perfil de profissional não encontrado.' });
     const agendamentos = await prisma.agendamento.findMany({
       where: { profissionalId: profissional.id },
       include: {
         servico: true,
-        cliente: {
-          select: { nome: true, email: true }
-        }
+        cliente: { select: { nome: true, email: true } }
       },
       orderBy: { data_hora_inicio: 'asc' }
     });
