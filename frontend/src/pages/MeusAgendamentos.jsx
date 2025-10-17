@@ -31,7 +31,7 @@ function MeusAgendamentos() {
       setError('');
     } catch (err) {
       setError('Não foi possível carregar os agendamentos.');
-      console.error(err);
+      console.error("Erro detalhado ao buscar agendamentos:", err); // Log para depuração
     } finally {
       setLoading(false);
     }
@@ -54,7 +54,7 @@ function MeusAgendamentos() {
       fetchAgendamentos();
     } catch (err) {
       setMensagem('Erro ao cancelar o agendamento.');
-      console.error(err);
+      console.error("Erro detalhado ao cancelar:", err);
     }
   };
 
